@@ -12,6 +12,7 @@ annotate view ZRAP100_C_TRAVELTP_99 with
     position: 10 , 
     type: #IDENTIFICATION_REFERENCE
   } ]
+
   @UI.identification: [ {
     position: 10 , 
     label: 'Travel ID'
@@ -128,19 +129,6 @@ annotate view ZRAP100_C_TRAVELTP_99 with
     position: 90 
   } ]
   OverallStatus;
-  
-  @UI.identification: [ {
-    position: 100 , 
-    label: 'Attachment'
-  } ]
-  @UI.lineItem: [ {
-    position: 100 , 
-    label: 'Attachment'
-  } ]
-  @UI.selectionField: [ {
-    position: 100 
-  } ]
-  Attachment;
   
   @UI.identification: [ {
     position: 110 , 

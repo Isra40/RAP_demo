@@ -1,6 +1,7 @@
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Approver Consumption Travel'
 @Metadata.ignorePropagatedAnnotations: true
+@Metadata.allowExtensions: true
 define root view entity ZCD_C_TRAVEL__A
   provider contract transactional_query
   as projection on ZCD_I_TRAVEL_M

@@ -16,48 +16,40 @@ CLASS ZCL_RAP_DEMO_99 IMPLEMENTATION.
 
 METHOD if_oo_adt_classrun~main.
 
-    DATA:
-      group_id   TYPE string VALUE '###',
-      attachment TYPE /dmo/attachment,
-      file_name  TYPE /dmo/filename,
-      mime_type  TYPE /dmo/mime_type.
+    DATA lt_travel   TYPE TABLE OF ztb_travel_m.
+    DATA lt_booking  TYPE TABLE OF ztb_booking_m.
+    DATA lt_book_sup TYPE TABLE OF ztb_booksuppl_m.
 
-*   clear data
-    DELETE FROM zrap100_atrav_99.
-*    DELETE FROM zrap100_dtrav99.
+    SELECT travel_id,
+           agency_id,
+           customer_id,
+           begin_date,
+           end_date,
+           booking_fee,
+           total_price,
+           currency_code,
+           description,
+           status        AS overall_status,
+           createdby     AS created_by,
+           createdat     AS created_at,
+           lastchangedby AS last_changed_by,
+           lastchangedat AS last_changed_at
+      FROM /dmo/travel
+      INTO CORRESPONDING FIELDS OF TABLE @lt_travel.
 
-    "insert travel demo data
-    INSERT zrap100_atrav_99  FROM (
-        SELECT
-          FROM /dmo/travel AS travel
-          FIELDS
-            travel~travel_id        AS travel_id,
-            travel~agency_id        AS agency_id,
-            travel~customer_id      AS customer_id,
-            travel~begin_date       AS begin_date,
-            travel~end_date         AS end_date,
-            travel~booking_fee      AS booking_fee,
-            travel~total_price      AS total_price,
-            travel~currency_code    AS currency_code,
-            travel~description      AS description,
-            CASE travel~status    "[N(New) | P(Planned) | B(Booked) | X(Cancelled)]
-              WHEN 'N' THEN 'O'
-              WHEN 'P' THEN 'O'
-              WHEN 'B' THEN 'A'
-              ELSE 'X'
-            END                     AS overall_status,
-            @attachment             AS attachment,
-            @mime_type              AS mime_type,
-            @file_name              AS file_name,
-            travel~createdby        AS created_by,
-            travel~createdat        AS created_at,
-            travel~lastchangedby    AS last_changed_by,
-            travel~lastchangedat    AS last_changed_at,
-            travel~lastchangedat    AS local_last_changed_at
-            ORDER BY travel_id UP TO 10 ROWS
-      ).
-    COMMIT WORK.
-    out->write( |[RAP100] Demo data generated for table ZRAP100_ATRAV_99. | ).
+    SELECT * FROM /dmo/booking INTO CORRESPONDING FIELDS OF TABLE @lt_booking.
+
+    SELECT * FROM /dmo/book_suppl INTO CORRESPONDING FIELDS OF TABLE @lt_book_sup.
+
+    DELETE FROM ztb_travel_m.
+    DELETE FROM ztb_booking_m.
+    DELETE FROM ztb_booksuppl_m.
+
+    INSERT: ztb_travel_m FROM TABLE @lt_travel,
+            ztb_booking_m FROM TABLE @lt_booking,
+            ztb_booksuppl_m FROM TABLE @lt_book_sup.
+
+    out->write( sy-dbcnt ). out->write( 'DONE!' ).
 
 ENDMETHOD.
 ENDCLASS.

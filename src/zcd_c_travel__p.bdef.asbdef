@@ -1,0 +1,37 @@
+projection;
+strict ( 2 );
+
+define behavior for ZCD_C_TRAVEL__P alias TravelProccesor
+use etag
+{
+  use create;
+  use update;
+  use delete;
+
+  use association _Booking { create; }
+
+  field ( readonly ) TotalPrice;
+
+  use action acceptTravel;
+  use action rejectTravel;
+  use action createTravelByTemplate;
+
+}
+
+define behavior for ZCD_C_BOOKING_P alias BookingProccesor
+{
+  use update;
+//  use delete;
+
+  use association _Travel;
+  use association _BookSupplement { create; }
+}
+
+define behavior for ZCD_C_BOOKSUPPL_P alias SupplementProccesor
+{
+  use update;
+//  use delete;
+
+  use association _Travel;
+  use association _Booking;
+}

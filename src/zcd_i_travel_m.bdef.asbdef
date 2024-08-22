@@ -11,9 +11,10 @@ etag master last_changed_at
   create;
   update;
   delete;
-  field ( readonly ) last_changed_at, last_changed_by, created_at, created_by;
+
+  field ( readonly ) travel_id, last_changed_at, last_changed_by, created_at, created_by;
   field ( mandatory ) agency_id, overall_status, booking_fee, currency_code;
-  field ( features : instance ) travel_id;
+
   association _Booking { create; }
 
   //Validations
@@ -40,8 +41,10 @@ etag master last_changed_at
 {
   update;
   delete;
+
   field ( readonly ) travel_id, booking_id;
   field ( mandatory ) carrier_id, connection_id, flight_date, booking_status;
+
   association _Travel;
   association _BookSupplement { create; }
 
@@ -64,8 +67,10 @@ etag master last_changed_at
 {
   update;
   delete;
+
   field ( readonly ) travel_id, booking_id, booking_supplement_id;
   field ( mandatory ) supplement_id, price;
+
   association _Travel;
   association _Booking;
 

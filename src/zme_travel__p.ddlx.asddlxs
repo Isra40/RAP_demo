@@ -69,9 +69,21 @@ annotate entity ZCD_C_TRAVEL__P with
   CurrencyCode;
 
   @UI: {
-  lineItem: [ { position: 50, importance: #HIGH },
-  { type: #FOR_ACTION, dataAction: 'createTravelByTemplate',
-    label: 'Create Travel by Template' } ],
+  lineItem: [ { position: 45, importance: #HIGH },
+              { type: #FOR_ACTION, 
+                dataAction: 'acceptTravel',
+                label: 'Accept Travel' 
+              }, 
+              { position: 48, importance: #HIGH },
+              { type: #FOR_ACTION, 
+                dataAction: 'rejectTravel',
+                label: 'Reject Travel' 
+              },              
+              { position: 50, importance: #HIGH },
+              { type: #FOR_ACTION, 
+                dataAction: 'createTravelByTemplate',
+                label: 'Create Travel by Template' 
+              } ],
   identification: [ { position: 45, label: 'Status [O(Open)|A(Accepted)|X(Canceled)]' } ]
   }
   TravelStatus;

@@ -29,7 +29,12 @@ METHOD if_oo_adt_classrun~main.
            total_price,
            currency_code,
            description,
-           status        AS overall_status,
+           case status
+             when 'B' THEN 'A'
+             when 'P' THEN 'A'
+             when 'N' THEN 'O'
+             when 'X' THEN 'X'
+           end as overall_status,
            createdby     AS created_by,
            createdat     AS created_at,
            lastchangedby AS last_changed_by,

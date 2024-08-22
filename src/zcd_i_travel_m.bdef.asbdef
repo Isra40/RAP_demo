@@ -1,0 +1,77 @@
+managed implementation in class zcl_bp_travel unique;
+strict ( 2 );
+
+define behavior for ZCD_I_TRAVEL_M alias Travel
+
+persistent table ztb_travel_m
+lock master
+authorization master ( instance )
+etag master last_changed_at
+{
+  create;
+  update;
+  delete;
+  field ( readonly ) last_changed_at, last_changed_by, created_at, created_by;
+  field ( mandatory ) agency_id, overall_status, booking_fee, currency_code;
+  field ( features : instance ) travel_id;
+  association _Booking { create; }
+
+  //Validations
+  validation validateCustomer on save { field customer_id; }
+  validation validateDates on save { field begin_date, end_date; }
+  validation validateStatus on save { field overall_status; }
+
+  //Actions
+  action ( features : instance ) acceptTravel result [1] $self;
+  action ( features : instance ) rejectTravel result [1] $self;
+  action createTravelByTemplate result [1] $self;
+
+  //Mapping
+  mapping for ztb_travel_m corresponding;
+
+}
+
+define behavior for ZCD_I_BOOKING_M alias Booking
+implementation in class zcl_bp_booking unique
+persistent table ztb_booking_m
+lock dependent by _Travel
+authorization dependent by _Travel
+etag master last_changed_at
+{
+  update;
+  delete;
+  field ( readonly ) travel_id, booking_id;
+  field ( mandatory ) carrier_id, connection_id, flight_date, booking_status;
+  association _Travel;
+  association _BookSupplement { create; }
+
+  //Validations
+  validation validateStatus on save { field booking_status; }
+
+  //Determinations
+  determination calculateTotalFlightPrice on modify { field flight_price, currency_code; }
+
+  //Mapping
+  mapping for ztb_booking_m corresponding;
+}
+
+define behavior for ZCD_I_BOOKSUPPL_M alias Supplement
+implementation in class zcl_bp_supplement unique
+with unmanaged save
+lock dependent by _Travel
+authorization dependent by _Travel
+etag master last_changed_at
+{
+  update;
+  delete;
+  field ( readonly ) travel_id, booking_id, booking_supplement_id;
+  field ( mandatory ) supplement_id, price;
+  association _Travel;
+  association _Booking;
+
+  //Determinations
+  determination calculateTotalSupplimPrice on modify { field price, currency_code; }
+
+  //Mapping
+  mapping for ztb_booksuppl_m corresponding;
+}
